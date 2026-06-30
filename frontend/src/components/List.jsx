@@ -1,5 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import "../style/list.css";
+import { Link, useParams } from "react-router-dom";
+
 
 function List() {
 
@@ -42,7 +44,10 @@ function List() {
         <li className="list-item">{index+1}</li>
         <li className="list-item">{item.title}</li>
         <li className="list-item">{item.description}</li>
-        <li className="list-item" ><button onClick={()=>deleteTask(item._id)} className="btns">Delete</button></li>
+        <li className="list-item" >
+        <button onClick={()=>deleteTask(item._id)} className="btns">Delete</button>
+        <Link className="update-btns" to={`/update/${item._id}`} >Update</Link>
+        </li>
 
         </Fragment>
     ))

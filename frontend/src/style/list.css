@@ -6,7 +6,7 @@
     list-style: none;
     padding: 0;
     margin: 20px;  
-    grid-template-columns: 50px 1fr 2fr 100px;
+    grid-template-columns: 50px 1fr 2fr 200px;
     
 }
 
@@ -24,7 +24,7 @@
 }
 .btns{
     background-color: #df1111;
-    width: 100%;
+    width: 50%;
     padding: 6px;
     color: #fff;
     border: none;
@@ -35,4 +35,22 @@
 }
 button:hover{
     background-color: rgb(155, 31, 31);
+}
+
+.update-btns{
+    background-color: green;
+    width: 50%;
+    padding: 6px;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 10px;
+    padding-left: 16px;
+    padding-right: 16px;
+
+}
+.update-btns:hover{
+    background-color: rgb(17, 97, 17);
 }
