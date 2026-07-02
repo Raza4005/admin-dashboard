@@ -29,7 +29,7 @@ if(result){
     resp.send({message:"Task list fetched", success: true, result})
 }else
     {
-    resp.send({message:"Error catch after sometime", success: false})
+    resp.send({message:"Error catched after sometime", success: false})
 
 }
 })
