@@ -6,7 +6,7 @@
     list-style: none;
     padding: 0;
     margin: 20px;  
-    grid-template-columns: 50px 1fr 2fr 200px;
+    grid-template-columns: 100px 50px 1fr 2fr 200px;
     
 }
 
@@ -33,8 +33,9 @@
     font-size: 14px;
 
 }
-button:hover{
-    background-color: rgb(16, 99, 27);
+.btns:hover {
+    background-color: #7a0b0b;
+   
 }
 
 .update-btns{
@@ -53,4 +54,9 @@ button:hover{
 }
 .update-btns:hover{
     background-color: rgb(17, 97, 17);
+}
+.delete-multiple {
+    width: 100px;
+        margin-left: 20px;  
+
 }

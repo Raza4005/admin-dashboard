@@ -2,11 +2,78 @@ import e from "express";
 import { collectionName, connection} from "./dbconfig.js";
 import cors from 'cors';
 import { ObjectId } from "mongodb";
-
+import jwt from "jsonwebtoken";
+import cookieParser from "cookie-parser";
 const app=e();
 
 app.use(e.json());
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true
+}));
+app.use(cookieParser());
+
+app.post("/login", async (req, resp) => {
+    const userData = req.body;
+    if (userData.email && userData.password) {
+        const db = await connection();
+        const collection = await db.collection('users');
+        const result = await collection.findOne({ email: userData.email, password: userData.password });
+        if (result) {
+            jwt.sign(userData, 'Google', { expiresIn: '5d' }, (error, token) => {
+                //  resp.cookie('token', token, {
+                //     httpOnly: true,
+                //     sameSite: 'lax'
+                // });
+                resp.send({
+                    success: true,
+                    msg: 'login done',
+                    token
+                })
+            })
+        }else{
+            resp.send({
+            success: false,
+            msg: 'User not found',
+        })
+
+        }
+    } else {
+        resp.send({
+            success: false,
+            msg: 'login not done',
+        })
+    }
+})
+
+
+app.post("/signup", async (req, resp) => {
+    const userData = req.body;
+    if (userData.email && userData.password) {
+        const db = await connection();
+        const collection = await db.collection('users');
+        const result = await collection.insertOne(userData);
+        if (result) {
+            jwt.sign(userData, 'Google', { expiresIn: '5d' }, (error, token) => {
+                //  resp.cookie('token', token, {
+                //     httpOnly: true,
+                //     sameSite: 'lax'
+                // });
+                resp.send({
+                    success: true,
+                    msg: 'signup done',
+                    token
+                })
+            })
+        }
+    } else {
+        resp.send({
+            success: false,
+            msg: 'signup not done',
+        })
+    }
+})
+
 
 app.post("/add-task",async (req,resp) => {
 const db = await connection();
@@ -21,8 +88,9 @@ if(result){
 }
 })
 
-app.get("/tasks",async (req,resp) => {
+app.get("/tasks",verifyJWTToken,async (req,resp) => {
 const db = await connection();
+console.log("Cookies test", req.cookies['token']);
 const collection = await db.collection(collectionName);
 const result = await collection.find().toArray();
 if(result){
@@ -33,6 +101,18 @@ if(result){
 
 }
 })
+function verifyJWTToken(req, resp, next) {
+    const token = req.cookies['token'];
+    jwt.verify(token, 'Google', (error, decoded) => {
+       if (error){
+        return resp.send({
+            message:"Invalid token",
+             success: false
+            })
+       }
+       next()
+    })
+}
 
 
 
@@ -74,6 +154,22 @@ app.get("/task/:id", async (req, resp) => {
         resp.send({ message: 'error try after sometime', success: false })
     }
 })
+
+app.delete("/delete-multiple", async (req, resp) => {
+    const db = await connection();
+    const Ids = req.body;
+    const deleteTaskIds = Ids.map((item) => new ObjectId(item));
+    console.log(Ids);
+
+    const collection = await db.collection(collectionName);
+    const result = await collection.deleteMany({ _id: {$in: deleteTaskIds}});
+    if (result) {
+        resp.send({ message: 'task deleted ', success: result, });
+    } else {
+        resp.send({ message: 'error try after sometime', success: false });
+    }
+});
+
 
 
 app.listen(3200, () => {
