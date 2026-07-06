@@ -22,14 +22,22 @@ function List() {
   if(list.success){
     settaskData(list.result)
   }
+  else{
+        alert("try later")
+    }
   }
 
     const deleteTask= async (id) => {
-  let item = await fetch('http://localhost:3200/delete/'+id,{method:"delete"});
+  let item = await fetch('http://localhost:3200/delete/'+id,{method:"delete",
+  credentials: 'include',
+});
   item = await item.json()
   if(item.success){
     console.log("Task Deleted")
   }
+  else{
+        alert("try later")
+    }
   }
 
   const seletedAll = (event) => {
@@ -55,16 +63,20 @@ function List() {
   const deleteMultiple = async () => {
         console.log(selectedTasks);
         let item = await fetch('http://localhost:3200/delete-multiple/', {
+        credentials: 'include',
         method: 'DELETE', 
         body: JSON.stringify(selectedTasks), 
          headers: {
         'Content-Type': 'application/json' 
     }
 });
-              item = await item.json();
+        item = await item.json();
         if (item.success) {
         getListData();
 }
+else{
+        alert("try later")
+    }
   }
   
   

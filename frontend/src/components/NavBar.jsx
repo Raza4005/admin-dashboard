@@ -1,25 +1,45 @@
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import "../style/navbar.css";
+import { useState, useEffect } from "react";
 
 const NavBar = () => {
+  const [login, setLogin] = useState(localStorage.getItem("login"))
+  const navigate = useNavigate()
+  const logout = () => {
+    localStorage.removeItem("login")
+    settimeout(() => {
+          navigate("/login")
+    }, 0);
+  }
+
+  useEffect(() => {
+    const handleStorage = () => {
+        setLogin(localStorage.getItem('login'))
+    }
+
+    window.addEventListener("localStorage-change", handleStorage)
+
+    return () => {
+        window.removeEventListener("localStorage-change", handleStorage)
+    }
+}, [])
+
   return (
     <nav className="navbar">
       <div className="logo">NavBar</div>
-
       <ul className="nav-links">
-        <li>
-          <Link to="/">List</Link>
-        </li>
+        {
+          login ?
+          <>
+          <li><Link to="/">List</Link></li>
+        <li><Link to="/add">Add Task</Link></li>
+        <li><Link to="/login" onClick={logout}>Logout</Link></li>
+        </>:null
+        }
 
-        <li>
-          <Link to="/add">Add Task</Link>
-        </li>
-        <li>
-        <Link to="/signup">Sign Up</Link>
-        </li>
       </ul>
     </nav>
   );
 };
 
-export default NavBar;
+export default NavBar

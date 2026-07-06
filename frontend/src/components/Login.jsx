@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom"
     console.log(userData);
     let result= await fetch('http://localhost:3200/login',{
     method:'Post',
-        'credentials': 'include',
+    'credentials': 'include',
     body:JSON.stringify(userData),
     headers:{
     'Content-Type':'Application/json',
@@ -25,6 +25,7 @@ import { useNavigate } from "react-router-dom"
     if(result.success){
     document.cookie = "token=" + result.token
     localStorage.setItem("login",userData.email)
+    window.dispatchEvent(new Event("localStorage-change"))
     navigate("/")
     }else{
         alert("try later")

@@ -16,6 +16,7 @@ const handleAddTask = async () => {
     let result = await fetch('http://localhost:3200/add-task', {
         method: 'POST',
         body: JSON.stringify(taskData),
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json'
         }
@@ -23,9 +24,11 @@ const handleAddTask = async () => {
     
     result = await result.json();
     
-    if (result) {
+    if (result.success) {
         navigate("/")
         console.log("New task added successfully");
+    }else {
+        alert("try after sometime")
     }
 };
 
